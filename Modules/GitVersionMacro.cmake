@@ -55,7 +55,7 @@ macro(generate_app_version)
 
             -DVERSION_FILES=Version.cpp\;Version.h
 
-            -DINPUT_DIR=${CMAKE_SOURCE_DIR}/CMake/Templates
+            -DINPUT_DIR=${CMAKE_SOURCE_DIR}/strata-cmake-modules/Templates
             -DWORKING_DIR=${CMAKE_CURRENT_BINARY_DIR}
 
             -DDEPLOYMENT_DIR=${CMAKE_BINARY_DIR}
@@ -78,7 +78,7 @@ macro(generate_app_version)
 
             -DSUPPORTED_PLUGINS=${SUPPORTED_PLUGINS}
 
-            -P ${CMAKE_SOURCE_DIR}/CMake/Modules/GitVersion-builder.cmake
+            -P ${CMAKE_SOURCE_DIR}/strata-cmake-modules/Modules/GitVersion-builder.cmake
             COMMENT "Analyzing git-tag version changes for '${PROJECT_NAME}'..." VERBATIM
     )
 
@@ -123,7 +123,7 @@ macro(generate_component_version)
     string(REPLACE "views-" "" COMPONENT_NS "${COMPONENT_NS}")
     set(COMPONENT_NS_PREFIX ${local_QRC_NAMESPACE})
     configure_file(
-        ${CMAKE_SOURCE_DIR}/CMake/Templates/version.qrc.in
+        ${CMAKE_SOURCE_DIR}/strata-cmake-modules/Templates/version.qrc.in
         ${CMAKE_CURRENT_BINARY_DIR}/version.qrc
         @ONLY
     )
@@ -147,7 +147,7 @@ macro(generate_component_version)
 
             -DVERSION_FILES=version.json
 
-            -DINPUT_DIR=${CMAKE_SOURCE_DIR}/CMake/Templates
+            -DINPUT_DIR=${CMAKE_SOURCE_DIR}/strata-cmake-modules/Templates
             -DWORKING_DIR=${CMAKE_CURRENT_BINARY_DIR}
 
             -DDEPLOYMENT_DIR=${CMAKE_BINARY_DIR}
@@ -160,7 +160,7 @@ macro(generate_component_version)
 
             -DGITTAG_PREFIX=${local_GITTAG_PREFIX}
 
-            -P ${CMAKE_SOURCE_DIR}/CMake/Modules/GitVersion-builder.cmake
+            -P ${CMAKE_SOURCE_DIR}/strata-cmake-modules/Modules/GitVersion-builder.cmake
             COMMENT "Analyzing git-tag version changes for '${PROJECT_NAME}'..." VERBATIM
     )
 
@@ -190,7 +190,7 @@ macro(generate_ifw_version)
                 -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
 
                 -DVERSION_FILES=version.json
-                -DINPUT_DIR=${CMAKE_SOURCE_DIR}/CMake/Templates
+                -DINPUT_DIR=${CMAKE_SOURCE_DIR}/strata-cmake-modules/Templates
                 -DWORKING_DIR=${CMAKE_CURRENT_BINARY_DIR}
                 -DDEPLOYMENT_DIR=${CMAKE_BINARY_DIR}
                 -DPROJECT_DIR=${CMAKE_CURRENT_SOURCE_DIR}
@@ -209,7 +209,7 @@ macro(generate_ifw_version)
 
                 -DGITTAG_PREFIX=${local_GITTAG_PREFIX}
 
-                -P ${CMAKE_SOURCE_DIR}/CMake/Modules/GitVersion-builder.cmake
+                -P ${CMAKE_SOURCE_DIR}/strata-cmake-modules/Modules/GitVersion-builder.cmake
                 COMMENT "Analyzing git-tag version changes for ${PROJECT_NAME}..." VERBATIM
         )
 
