@@ -1,71 +1,78 @@
-if(EXISTS ${GIT_ROOT_DIR}/.git OR NOT USE_GITTAG_VERSION)
-    if (USE_GITTAG_VERSION)
-        message(STATUS "Searching for tag: '${GITTAG_PREFIX}v...'")
-        execute_process(
-            COMMAND ${GIT_EXECUTABLE} describe --tags --dirty --match "${GITTAG_PREFIX}v*"
-            WORKING_DIRECTORY ${GIT_ROOT_DIR}
-            RESULT_VARIABLE res_var
-            OUTPUT_VARIABLE GIT_COMMIT_ID
-            ERROR_VARIABLE GIT_SKIP_ERROR_OUTPUT
-        )
-        message(STATUS "Searching for Git hash...'")
-        execute_process(
-            COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
-            WORKING_DIRECTORY ${GIT_ROOT_DIR}
-            RESULT_VARIABLE res_var3
-            OUTPUT_VARIABLE GIT_REVISION
-        )
-        string(REGEX REPLACE "\n$" "" GIT_REVISION ${GIT_REVISION})
-    else()
-        message(STATUS "Reading version strings from Git tags disabled. Defaulting to 'v0.0.0'...")
-        set(GIT_COMMIT_ID "0.0.0\n")
-    endif()
-    if(NOT ${res_var} EQUAL 0)
-        message(STATUS "SKIP, can't receive Git version (not a repo, or no project tags). Defaulting to 'v0.0.1'...")
-        set(GIT_COMMIT_ID "0.0.1\n")
-    endif()
-    string(REGEX REPLACE "\n$" "" GIT_COMMIT_ID ${GIT_COMMIT_ID})
-    string(REGEX REPLACE "^${GITTAG_PREFIX}v" "" GIT_COMMIT_ID ${GIT_COMMIT_ID})
+execute_process(
+    COMMAND ${GIT_EXECUTABLE} rev-parse 
+    WORKING_DIRECTORY ${GIT_ROOT_DIR}
+    RESULT_VARIABLE res_git_repo
+)
 
-    # check number of digits in version string
-    string(REPLACE "." ";" GIT_COMMIT_ID_VLIST ${GIT_COMMIT_ID})
-    list(LENGTH GIT_COMMIT_ID_VLIST GIT_COMMIT_ID_VLIST_COUNT)
-
-    # no.: major
-    string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" VERSION_MAJOR "${GIT_COMMIT_ID}")
-    # no.: minor
-    string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${GIT_COMMIT_ID}")
-
-    set(PROJECT_VERSION "v${VERSION_MAJOR}.${VERSION_MINOR}")
-    set(BUILD_ID ${PROJECT_VERSION_TWEAK})
-
-    if("${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "2")
-        # no. patch
-        set(VERSION_PATCH "0")
-        string(APPEND PROJECT_VERSION ".0")
-        string(APPEND PROJECT_VERSION ".${BUILD_ID}")
-        # SHA1 string + git 'dirty' flag
-        string(REGEX REPLACE "^[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
-    else()
-        # no. patch
-        string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${GIT_COMMIT_ID}")
-        string(APPEND PROJECT_VERSION ".${VERSION_PATCH}")
-        string(APPEND PROJECT_VERSION ".${BUILD_ID}")
-        # SHA1 string + git 'dirty' flag
-        string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
-    endif()
-
-    # stage of build
-    string(REGEX MATCH "((alpha|beta|rc)[0-9]+)|(rtm|ga)" VERSION_STAGE ${GIT_COMMIT_ID})
-    if (NOT "${VERSION_STAGE}" STREQUAL "")
-        set(STAGE_OF_DEVELOPMENT ${VERSION_STAGE})
-    endif()
-
-    string(APPEND PROJECT_VERSION "${VERSION_GIT_STATE}")
-    message(STATUS "${PROJECT_NAME}: ${PROJECT_VERSION} (stage: ${STAGE_OF_DEVELOPMENT})")
-else()
-    message(FATAL_ERROR "Not a git cloned project. Can't create version string from git tag!!")
+if(NOT ${res_git_repo} EQUAL 0)
+    message(FATAL_ERROR "${GIT_ROOT_DIR}\nis Not a git cloned project. Can't create version string from git tag!!")
 endif()
+
+if (USE_GITTAG_VERSION)
+    message(STATUS "Searching for tag: '${GITTAG_PREFIX}v...'")
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} describe --tags --dirty --match "${GITTAG_PREFIX}v*"
+        WORKING_DIRECTORY ${GIT_ROOT_DIR}
+        RESULT_VARIABLE res_var
+        OUTPUT_VARIABLE GIT_COMMIT_ID
+        ERROR_VARIABLE GIT_SKIP_ERROR_OUTPUT
+    )
+    message(STATUS "Searching for Git hash...'")
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+        WORKING_DIRECTORY ${GIT_ROOT_DIR}
+        RESULT_VARIABLE res_var3
+        OUTPUT_VARIABLE GIT_REVISION
+    )
+    string(REGEX REPLACE "\n$" "" GIT_REVISION ${GIT_REVISION})
+else()
+    message(STATUS "Reading version strings from Git tags disabled. Defaulting to 'v0.0.0'...")
+    set(GIT_COMMIT_ID "0.0.0\n")
+endif()
+
+if(NOT ${res_var} EQUAL 0)
+    message(STATUS "SKIP, can't receive Git version (not a repo, or no project tags). Defaulting to 'v0.0.1'...")
+    set(GIT_COMMIT_ID "0.0.1\n")
+endif()
+string(REGEX REPLACE "\n$" "" GIT_COMMIT_ID ${GIT_COMMIT_ID})
+string(REGEX REPLACE "^${GITTAG_PREFIX}v" "" GIT_COMMIT_ID ${GIT_COMMIT_ID})
+
+# check number of digits in version string
+string(REPLACE "." ";" GIT_COMMIT_ID_VLIST ${GIT_COMMIT_ID})
+list(LENGTH GIT_COMMIT_ID_VLIST GIT_COMMIT_ID_VLIST_COUNT)
+
+# no.: major
+string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" VERSION_MAJOR "${GIT_COMMIT_ID}")
+# no.: minor
+string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${GIT_COMMIT_ID}")
+
+set(PROJECT_VERSION "v${VERSION_MAJOR}.${VERSION_MINOR}")
+set(BUILD_ID ${PROJECT_VERSION_TWEAK})
+
+if("${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "2")
+    # no. patch
+    set(VERSION_PATCH "0")
+    string(APPEND PROJECT_VERSION ".0")
+    string(APPEND PROJECT_VERSION ".${BUILD_ID}")
+    # SHA1 string + git 'dirty' flag
+    string(REGEX REPLACE "^[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
+else()
+    # no. patch
+    string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${GIT_COMMIT_ID}")
+    string(APPEND PROJECT_VERSION ".${VERSION_PATCH}")
+    string(APPEND PROJECT_VERSION ".${BUILD_ID}")
+    # SHA1 string + git 'dirty' flag
+    string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
+endif()
+
+# stage of build
+string(REGEX MATCH "((alpha|beta|rc)[0-9]+)|(rtm|ga)" VERSION_STAGE ${GIT_COMMIT_ID})
+if (NOT "${VERSION_STAGE}" STREQUAL "")
+    set(STAGE_OF_DEVELOPMENT ${VERSION_STAGE})
+endif()
+
+string(APPEND PROJECT_VERSION "${VERSION_GIT_STATE}")
+message(STATUS "${PROJECT_NAME}: ${PROJECT_VERSION} (stage: ${STAGE_OF_DEVELOPMENT})")
 
 function(process_config_file PROJECT_NAME INPUT_DIR WORKING_DIR DEPLOYMENT_DIR CONFIG_FILENAMES)
     string(TIMESTAMP BUILD_TIMESTAMP "%Y-%m-%d")

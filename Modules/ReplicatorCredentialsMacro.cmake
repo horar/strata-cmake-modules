@@ -38,12 +38,12 @@ macro(generate_replicator_credentials)
             COMMAND ${CMAKE_COMMAND}
                 -DPROJECT_NAME=${PROJECT_NAME}
                 -DBUILD_TYPE=${CMAKE_BUILD_TYPE}
-                -DINPUT_DIR=${CMAKE_SOURCE_DIR}/CMake/Templates
+                -DINPUT_DIR=${CMAKE_SOURCE_DIR}/strata-cmake-modules/Templates
                 -DOUTPUT_DIR=${CMAKE_CURRENT_BINARY_DIR}
                 -DUSERNAME=${USERNAME}
                 -DPASSWORD=${PASSWORD}
         
-                -P ${CMAKE_SOURCE_DIR}/CMake/Modules/ReplicatorCredentials-builder.cmake
+                -P ${CMAKE_SOURCE_DIR}/strata-cmake-modules/Modules/ReplicatorCredentials-builder.cmake
             COMMENT "Generating replicator credentials for '${PROJECT_NAME}'..." VERBATIM
         )
 

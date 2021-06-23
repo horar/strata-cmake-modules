@@ -28,9 +28,9 @@ macro(generate_app_build_timestamp)
             COMMAND ${CMAKE_COMMAND}
                 -DPROJECT_NAME=${PROJECT_NAME}
                 -DBUILD_TYPE=${CMAKE_BUILD_TYPE}
-                -DINPUT_DIR=${CMAKE_SOURCE_DIR}/CMake/Templates
+                -DINPUT_DIR=${CMAKE_SOURCE_DIR}/strata-cmake-modules/Templates
                 -DOUTPUT_DIR=${CMAKE_CURRENT_BINARY_DIR}
-                -P ${CMAKE_SOURCE_DIR}/CMake/Modules/Timestamp-builder.cmake
+                -P ${CMAKE_SOURCE_DIR}/strata-cmake-modules/Modules/Timestamp-builder.cmake
             COMMENT "Generating build timestamp for '${PROJECT_NAME}'..." VERBATIM
         )
 
