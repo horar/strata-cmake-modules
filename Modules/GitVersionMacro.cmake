@@ -78,6 +78,8 @@ macro(generate_app_version)
 
             -DSUPPORTED_PLUGINS=${SUPPORTED_PLUGINS}
 
+            -DIS_APP=TRUE
+
             -P ${CMAKE_SOURCE_DIR}/strata-cmake-modules/Modules/GitVersion-builder.cmake
             COMMENT "Analyzing git-tag version changes for '${PROJECT_NAME}'..." VERBATIM
     )
@@ -159,6 +161,8 @@ macro(generate_component_version)
             -DPROJECT_VERSION_TWEAK=${BUILD_ID}
 
             -DGITTAG_PREFIX=${local_GITTAG_PREFIX}
+
+            -DIS_APP=FALSE
 
             -P ${CMAKE_SOURCE_DIR}/strata-cmake-modules/Modules/GitVersion-builder.cmake
             COMMENT "Analyzing git-tag version changes for '${PROJECT_NAME}'..." VERBATIM
