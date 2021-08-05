@@ -11,6 +11,9 @@ macro(add_view)
             message(STATUS "...removing 'views-${local_NAME}.rcc'")
             file(REMOVE ${CMAKE_VIEWS_OUTPUT_DIRECTORY}/views-${local_NAME}.rcc)
         endif()
+
+        # update/remove QML mobule import path for this project here
+        remove_qml_import_path(PATH "${CMAKE_CURRENT_SOURCE_DIR}")
     else()
         message(STATUS "Strata view '${local_NAME}'...")
 
