@@ -11,6 +11,9 @@ macro(add_view)
             message(STATUS "...removing 'views-${local_NAME}.rcc'")
             file(REMOVE ${CMAKE_VIEWS_OUTPUT_DIRECTORY}/views-${local_NAME}.rcc)
         endif()
+
+        # update/remove QML mobule import path for this project here
+        remove_qml_import_path(PATH "${CMAKE_CURRENT_SOURCE_DIR}")
     else()
         message(STATUS "Strata view '${local_NAME}'...")
 
@@ -27,12 +30,7 @@ macro(add_view)
         set(PROJECT_NAME views-${local_NAME})
         generate_component_version(GITTAG_PREFIX ${local_NAME}_ QRC_NAMESPACE "/views")
 
-        ## [LC] update QML mobule import paths for this project here
-        #list(APPEND QML_DIRS "${CMAKE_CURRENT_SOURCE_DIR}")
-        #
-        ## Additional import path used to resolve QML modules in Qt Creator's code model
-        #set(QML_IMPORT_PATH "${QML_DIRS};${QML_IMPORT_PATH}"
-        #    CACHE STRING "Qt Creator extra qml import paths" FORCE
-        #)
+        # [LC] update QML mobule import paths for this project here
+        add_qml_import_path(PATH "${CMAKE_CURRENT_SOURCE_DIR}")
     endif()
 endmacro()

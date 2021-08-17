@@ -31,7 +31,7 @@ else()
 endif()
 
 if(NOT ${res_var} EQUAL 0)
-    message(STATUS "SKIP, can't receive Git version (not a repo, or no project tags). Defaulting to 'v0.0.1'...")
+    message(STATUS "SKIP, can't receive Git version (not a repo, or no project tags; code: ${res_var}). Defaulting to 'v0.0.1'...")
     set(GIT_COMMIT_ID "0.0.1\n")
 endif()
 string(REGEX REPLACE "\n$" "" GIT_COMMIT_ID ${GIT_COMMIT_ID})
