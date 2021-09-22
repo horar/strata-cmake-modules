@@ -60,6 +60,7 @@ set(BUILD_ID ${PROJECT_VERSION_TWEAK})
 if("${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "2")
     # no. patch
     set(VERSION_PATCH "0")
+    set(VERSION_OPTIONAL "0")
     string(APPEND PROJECT_VERSION ".0")
     string(APPEND PROJECT_VERSION ".${BUILD_ID}")
     # SHA1 string + git 'dirty' flag
@@ -68,6 +69,14 @@ else()
     # no. patch
     string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${GIT_COMMIT_ID}")
     string(APPEND PROJECT_VERSION ".${VERSION_PATCH}")
+
+    if(NOT "${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "3")
+        string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_OPTIONAL "${GIT_COMMIT_ID}")
+        string(APPEND PROJECT_VERSION ".${VERSION_OPTIONAL}")
+    else()
+        set(VERSION_OPTIONAL "0")
+    endif()
+
     string(APPEND PROJECT_VERSION ".${BUILD_ID}")
     # SHA1 string + git 'dirty' flag
     string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
