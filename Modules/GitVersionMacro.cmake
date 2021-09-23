@@ -62,7 +62,8 @@ macro(generate_app_version)
 
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
 
-            -DVERSION_FILES=Version.cpp\;Version.h
+            -DVERSION_IN_FILES=Version.cpp\;Version.h
+            -DVERSION_OUT_FILES=Version.cpp\;Version.h
 
             -DINPUT_DIR=${CMAKE_SOURCE_DIR}/strata-cmake-modules/Templates
             -DWORKING_DIR=${CMAKE_CURRENT_BINARY_DIR}
@@ -156,7 +157,8 @@ macro(generate_component_version)
 
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
 
-            -DVERSION_FILES=version.json
+            -DVERSION_IN_FILES=${${PROJECT_NAME}_input_file}
+            -DVERSION_OUT_FILES=version.json
 
             -DINPUT_DIR=${CMAKE_SOURCE_DIR}/strata-cmake-modules/Templates
             -DWORKING_DIR=${CMAKE_CURRENT_BINARY_DIR}
@@ -202,7 +204,8 @@ macro(generate_ifw_version)
 
                 -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
 
-                -DVERSION_FILES=version.json
+                -DVERSION_IN_FILES=version.json
+                -DVERSION_OUT_FILES=version.json
                 -DINPUT_DIR=${CMAKE_SOURCE_DIR}/strata-cmake-modules/Templates
                 -DWORKING_DIR=${CMAKE_CURRENT_BINARY_DIR}
                 -DDEPLOYMENT_DIR=${CMAKE_BINARY_DIR}

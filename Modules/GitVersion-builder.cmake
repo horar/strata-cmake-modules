@@ -82,19 +82,19 @@ endif()
 string(APPEND PROJECT_VERSION "${VERSION_GIT_STATE}")
 message(STATUS "${PROJECT_NAME}: ${PROJECT_VERSION} (stage: ${STAGE_OF_DEVELOPMENT})")
 
-function(process_config_file PROJECT_NAME INPUT_DIR WORKING_DIR DEPLOYMENT_DIR CONFIG_FILENAMES)
+function(process_config_file PROJECT_NAME INPUT_DIR WORKING_DIR DEPLOYMENT_DIR CONFIG_IN_FILENAMES CONFIG_OUT_FILENAMES)
     string(TIMESTAMP BUILD_TIMESTAMP "%Y-%m-%d")
 
-    foreach(configFileName IN LISTS CONFIG_FILENAMES)
-        message(STATUS "Processing ${PROJECT_NAME} ${configFileName} file...")
+    foreach(configInFileName configOutFileName IN ZIP_LISTS CONFIG_IN_FILENAMES CONFIG_OUT_FILENAMES)
+        message(STATUS "Processing ${PROJECT_NAME} ${configInFileName} file...")
 
-        file(READ ${INPUT_DIR}/${configFileName}.in inFile_original)
+        file(READ ${INPUT_DIR}/${configInFileName}.in inFile_original)
         string(CONFIGURE "${inFile_original}" inFile_updated @ONLY)
-        file(WRITE ${WORKING_DIR}/${configFileName}.tmp "${inFile_updated}")
+        file(WRITE ${WORKING_DIR}/${configInFileName}.tmp "${inFile_updated}")
         execute_process(
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            ${WORKING_DIR}/${configFileName}.tmp
-            ${DEPLOYMENT_DIR}/${configFileName}
+            ${WORKING_DIR}/${configInFileName}.tmp
+            ${DEPLOYMENT_DIR}/${configOutFileName}
         )
     endforeach()
 endfunction()
@@ -108,13 +108,13 @@ function(process_resource_file PROJECT_NAME INPUT_DIR WORKING_DIR DEPLOYMENT_DIR
 endfunction()
 
 if(EXISTS ${PROJECT_DIR}/resources/qtifw/packages/meta/package.xml.in AND CMAKE_BUILD_TYPE STREQUAL "OTA")
-    process_config_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/packages/meta/ ${WORKING_DIR} ${DEPLOYMENT_DIR}/packages/${PROJECT_BUNDLE_ID}/meta package.xml)
+    process_config_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/packages/meta/ ${WORKING_DIR} ${DEPLOYMENT_DIR}/packages/${PROJECT_BUNDLE_ID}/meta package.xml package.xml)
 else()
-    process_config_file(${PROJECT_NAME} ${INPUT_DIR} ${WORKING_DIR} ${WORKING_DIR} "${VERSION_FILES}")
+    process_config_file(${PROJECT_NAME} ${INPUT_DIR} ${WORKING_DIR} ${WORKING_DIR} "${VERSION_IN_FILES}" "${VERSION_OUT_FILES}")
     if(APPLE AND PROJECT_MACBUNDLE)
-        process_config_file(${PROJECT_NAME} ${INPUT_DIR} ${WORKING_DIR} ${WORKING_DIR} Info.plist)
+        process_config_file(${PROJECT_NAME} ${INPUT_DIR} ${WORKING_DIR} ${WORKING_DIR} Info.plist Info.plist)
     elseif(WIN32 AND IS_APP)
-        process_config_file(${PROJECT_NAME} ${INPUT_DIR} ${WORKING_DIR} ${WORKING_DIR} App.rc)
+        process_config_file(${PROJECT_NAME} ${INPUT_DIR} ${WORKING_DIR} ${WORKING_DIR} App.rc App.rc)
     else()
         message(STATUS "Nothing platform specific to generate on this openrating system.")
     endif()
@@ -122,7 +122,7 @@ endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "OTA")
     if(EXISTS ${PROJECT_DIR}/resources/qtifw/meta/package.xml.in)
-        process_config_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/meta/ ${WORKING_DIR} ${DEPLOYMENT_DIR}/packages/${PROJECT_BUNDLE_ID}/meta package.xml)
+        process_config_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/meta/ ${WORKING_DIR} ${DEPLOYMENT_DIR}/packages/${PROJECT_BUNDLE_ID}/meta package.xml package.xml)
     endif()
 
     file(GLOB files "${PROJECT_DIR}/resources/qtifw/config/*")
@@ -132,7 +132,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "OTA")
             set(STRATA_OTA_REPOSITORY_ENABLED $ENV{STRATA_OTA_REPOSITORY_ENABLED})
 			set(STRATA_OTA_REPOSITORY $ENV{STRATA_OTA_REPOSITORY})
             set(ApplicationsDirX64 "@ApplicationsDirX64@")
-            process_config_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/config ${WORKING_DIR} ${DEPLOYMENT_DIR}/config config.xml)
+            process_config_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/config ${WORKING_DIR} ${DEPLOYMENT_DIR}/config config.xml config.xml)
         else()
             process_resource_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/config ${WORKING_DIR} ${DEPLOYMENT_DIR}/config ${filename})
         endif()
