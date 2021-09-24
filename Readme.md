@@ -10,7 +10,7 @@ For pull requests, please follow the steps below:
 
 * Keep it simple.
 * Keep it consistence with the design.
-* Follow follow CMake best practices.
+* Follow CMake best practices.
 
 ## License
 
