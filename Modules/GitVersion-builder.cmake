@@ -60,7 +60,7 @@ set(BUILD_ID ${PROJECT_VERSION_TWEAK})
 if("${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "2")
     # no.: patch
     set(VERSION_PATCH "0")
-    # no.: optional
+    # no.: optional, used for external components which require 4th version digit (for example openssl)
     set(VERSION_OPTIONAL "0")
     string(APPEND PROJECT_VERSION ".0")
     string(APPEND PROJECT_VERSION ".${BUILD_ID}")
@@ -72,11 +72,17 @@ else()
     string(APPEND PROJECT_VERSION ".${VERSION_PATCH}")
 
     if(NOT "${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "3")
-        # no.: optional
-        string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+\\.((:?[0-9]+\\.)*[0-9]+).*" "\\1" VERSION_OPTIONAL "${GIT_COMMIT_ID}")
+        # no.: optional, used for external components which require 4th version digit (for example openssl)
+        string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_OPTIONAL "${GIT_COMMIT_ID}")
         string(APPEND PROJECT_VERSION ".${VERSION_OPTIONAL}")
+
+        if(NOT "${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "4")
+            # string of remaining version digits
+            string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+\\.((:?[0-9]+\\.)*[0-9]+).*" "\\1" VERSION_REMAINING "${GIT_COMMIT_ID}")
+            message(WARNING "Unexpected number of digits (${GIT_COMMIT_ID_VLIST_COUNT}) in version string '${GIT_COMMIT_ID}', the remaining digits '${VERSION_REMAINING}' will not be included!")
+        endif()
     else()
-        # no.: optional
+        # no.: optional, used for external components which require 4th version digit (for example openssl)
         set(VERSION_OPTIONAL "0")
     endif()
 
