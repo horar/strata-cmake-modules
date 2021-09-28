@@ -58,19 +58,37 @@ set(PROJECT_VERSION "v${VERSION_MAJOR}.${VERSION_MINOR}")
 set(BUILD_ID ${PROJECT_VERSION_TWEAK})
 
 if("${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "2")
-    # no. patch
+    # no.: patch
     set(VERSION_PATCH "0")
+    # no.: optional, used for external components which require 4th version digit (for example openssl)
+    set(VERSION_OPTIONAL "0")
     string(APPEND PROJECT_VERSION ".0")
     string(APPEND PROJECT_VERSION ".${BUILD_ID}")
     # SHA1 string + git 'dirty' flag
     string(REGEX REPLACE "^[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
 else()
-    # no. patch
+    # no.: patch
     string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${GIT_COMMIT_ID}")
     string(APPEND PROJECT_VERSION ".${VERSION_PATCH}")
+
+    if(NOT "${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "3")
+        # no.: optional, used for external components which require 4th version digit (for example openssl)
+        string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_OPTIONAL "${GIT_COMMIT_ID}")
+        string(APPEND PROJECT_VERSION ".${VERSION_OPTIONAL}")
+
+        if(NOT "${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "4")
+            # string of remaining version digits
+            string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+\\.((:?[0-9]+\\.)*[0-9]+).*" "\\1" VERSION_REMAINING "${GIT_COMMIT_ID}")
+            message(WARNING "Unexpected number of digits (${GIT_COMMIT_ID_VLIST_COUNT}) in version string '${GIT_COMMIT_ID}', the remaining digits '${VERSION_REMAINING}' will not be included!")
+        endif()
+    else()
+        # no.: optional, used for external components which require 4th version digit (for example openssl)
+        set(VERSION_OPTIONAL "0")
+    endif()
+
     string(APPEND PROJECT_VERSION ".${BUILD_ID}")
     # SHA1 string + git 'dirty' flag
-    string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
+    string(REGEX REPLACE "^[0-9]+(:?\\.[0-9]+)+(.*)" "\\1" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
 endif()
 
 # stage of build
