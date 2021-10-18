@@ -78,7 +78,7 @@ else()
 
         if(NOT "${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "4")
             # string of remaining version digits
-            string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+\\.((:?[0-9]+\\.)*[0-9]+).*" "\\1" VERSION_REMAINING "${GIT_COMMIT_ID}")
+            string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+\\.(([0-9]+\\.)*[0-9]+).*" "\\1" VERSION_REMAINING "${GIT_COMMIT_ID}")
             message(WARNING "Unexpected number of digits (${GIT_COMMIT_ID_VLIST_COUNT}) in version string '${GIT_COMMIT_ID}', the remaining digits '${VERSION_REMAINING}' will not be included!")
         endif()
     else()
@@ -88,7 +88,7 @@ else()
 
     string(APPEND PROJECT_VERSION ".${BUILD_ID}")
     # SHA1 string + git 'dirty' flag
-    string(REGEX REPLACE "^[0-9]+(:?\\.[0-9]+)+(.*)" "\\1" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
+    string(REGEX REPLACE "^[0-9]+(\\.[0-9]+)+(.*)" "\\2" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
 endif()
 
 # stage of build
