@@ -27,7 +27,7 @@ macro(add_view)
 
         file(GLOB_RECURSE QRC_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/qml*.qrc)
         if(QRC_SRCS STREQUAL "")
-              message(FATAL_ERROR "Wrong QRC file path for project '${local_NAME}'...")
+              message(FATAL_ERROR "Wrong/bad QRC file name of project '${local_NAME}'...")
         endif()
         list(APPEND QRC_SRCS "${CMAKE_CURRENT_BINARY_DIR}/version.qrc")
 
