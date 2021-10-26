@@ -26,6 +26,9 @@ macro(add_view)
         message(STATUS "Strata view '${local_NAME}'...")
 
         file(GLOB_RECURSE QRC_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/qml*.qrc)
+        if(QRC_SRCS STREQUAL "")
+              message(FATAL_ERROR "Wrong/bad QRC file name of project '${local_NAME}'...")
+        endif()
         list(APPEND QRC_SRCS "${CMAKE_CURRENT_BINARY_DIR}/version.qrc")
 
         add_custom_target(views-${local_NAME}_qrcs SOURCES ${QRC_SRCS} version.json)
