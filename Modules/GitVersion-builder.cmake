@@ -92,7 +92,7 @@ else()
 endif()
 
 # stage of build
-string(REGEX MATCH "((alpha|beta|rc)[0-9]+)|(rtm|ga)[-]" VERSION_STAGE "${VERSION_GIT_STATE}")
+string(REGEX MATCH "((alpha|beta|rc)[0-9]*)|(rtm|ga)[-]" VERSION_STAGE "${VERSION_GIT_STATE}")
 if (NOT "${VERSION_STAGE}" STREQUAL "")
     set(STAGE_OF_DEVELOPMENT ${VERSION_STAGE})
     string(REPLACE "${VERSION_STAGE}-" "" VERSION_GIT_STATE "${VERSION_GIT_STATE}")
