@@ -19,7 +19,7 @@ endif()
 if (USE_GITTAG_VERSION)
     message(STATUS "Searching for tag: '${GITTAG_PREFIX}v...'")
     execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --tags --dirty --match "${GITTAG_PREFIX}v*"
+        COMMAND ${GIT_EXECUTABLE} describe --tags --dirty=-uncommited --match "${GITTAG_PREFIX}v*"
         WORKING_DIRECTORY ${GIT_ROOT_DIR}
         RESULT_VARIABLE res_var
         OUTPUT_VARIABLE GIT_COMMIT_ID
@@ -92,10 +92,14 @@ else()
 endif()
 
 # stage of build
-string(REGEX MATCH "((alpha|beta|rc)[0-9]+)|(rtm|ga)" VERSION_STAGE ${GIT_COMMIT_ID})
+string(REGEX MATCH "((alpha|beta|rc)[0-9]+)|(rtm|ga)[-]" VERSION_STAGE "${VERSION_GIT_STATE}")
 if (NOT "${VERSION_STAGE}" STREQUAL "")
     set(STAGE_OF_DEVELOPMENT ${VERSION_STAGE})
+    string(REPLACE "${VERSION_STAGE}-" "" VERSION_GIT_STATE "${VERSION_GIT_STATE}")
 endif()
+
+# commit count
+string(REGEX REPLACE "^-([0-9]*)-g.*" "\\1" VERSION_GIT_COMMIT_COUNT "${VERSION_GIT_STATE}")
 
 string(APPEND PROJECT_VERSION "${VERSION_GIT_STATE}")
 message(STATUS "${PROJECT_NAME}: ${PROJECT_VERSION} (stage: ${STAGE_OF_DEVELOPMENT})")
