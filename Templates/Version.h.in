@@ -12,6 +12,7 @@ struct AppInfo final {
     static const std::string_view versionPatch;
 
     static const std::string_view buildId;
+    static const std::string_view countOfCommits;
     static const std::string_view gitRevision;
     static const std::string_view stageOfDevelopment;
 

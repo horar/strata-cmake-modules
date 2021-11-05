@@ -12,6 +12,7 @@ const std::string_view AppInfo::versionMinor{"@VERSION_MINOR@"sv};
 const std::string_view AppInfo::versionPatch{"@VERSION_PATCH@"sv};
 
 const std::string_view AppInfo::buildId{"@BUILD_ID@"sv};
+const std::string_view AppInfo::countOfCommits{"@VERSION_GIT_COMMIT_COUNT@"sv};
 const std::string_view AppInfo::gitRevision{"@GIT_REVISION@"sv};
 const std::string_view AppInfo::stageOfDevelopment{"@STAGE_OF_DEVELOPMENT@"sv};
 
