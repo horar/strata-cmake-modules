@@ -66,10 +66,14 @@ if("${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "2")
     string(APPEND PROJECT_VERSION ".${BUILD_ID}")
     # SHA1 string + git 'dirty' flag
     string(REGEX REPLACE "^[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
+    # used when parsing package.xml.in
+    set(MODULE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_GIT_STATE}-${BUILD_ID}")
 else()
     # no.: patch
     string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${GIT_COMMIT_ID}")
     string(APPEND PROJECT_VERSION ".${VERSION_PATCH}")
+    # used when parsing package.xml.in
+    set(MODULE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
     if(NOT "${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "3")
         # no.: optional, used for external components which require 4th version digit (for example openssl)
@@ -81,6 +85,7 @@ else()
             string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+\\.(([0-9]+\\.)*[0-9]+).*" "\\1" VERSION_REMAINING "${GIT_COMMIT_ID}")
             message(WARNING "Unexpected number of digits (${GIT_COMMIT_ID_VLIST_COUNT}) in version string '${GIT_COMMIT_ID}', the remaining digits '${VERSION_REMAINING}' will not be included!")
         endif()
+        string(APPEND MODULE_VERSION ".${VERSION_OPTIONAL}")
     else()
         # no.: optional, used for external components which require 4th version digit (for example openssl)
         set(VERSION_OPTIONAL "0")
@@ -89,6 +94,7 @@ else()
     string(APPEND PROJECT_VERSION ".${BUILD_ID}")
     # SHA1 string + git 'dirty' flag
     string(REGEX REPLACE "^[0-9]+(\\.[0-9]+)+(.*)" "\\2" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
+    string(APPEND MODULE_VERSION "${VERSION_GIT_STATE}-${BUILD_ID}")
 endif()
 
 # stage of build
