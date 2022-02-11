@@ -36,8 +36,10 @@ macro(add_qml_debug_plugin_to_version)
     set(options PROJ_NAME PLUGIN_NAME)
     cmake_parse_arguments(local "" "${options}" "" ${ARGN})
 
-    message(STATUS "Qml Debug plugin '${local_PLUGIN_NAME}' for '${local_PROJ_NAME}'...")
+    if(APPS_PLUGINS_QMLDEBUG)
+        message(STATUS "Qml Debug plugin '${local_PLUGIN_NAME}' for '${local_PROJ_NAME}'...")
 
-    list(APPEND ${local_PROJ_NAME}_ENABLED_PLUGINS ${local_PLUGIN_NAME})
+        list(APPEND ${local_PROJ_NAME}_ENABLED_PLUGINS ${local_PLUGIN_NAME})
+    endif()
 
 endmacro()
