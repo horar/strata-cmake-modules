@@ -67,7 +67,7 @@ if("${GIT_COMMIT_ID_VLIST_COUNT}" STREQUAL "2")
     # SHA1 string + git 'dirty' flag
     string(REGEX REPLACE "^[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
     # used when parsing package.xml.in
-    set(MODULE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_GIT_STATE}-${BUILD_ID}")
+    set(MODULE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_GIT_STATE}")
 else()
     # no.: patch
     string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${GIT_COMMIT_ID}")
@@ -94,7 +94,7 @@ else()
     string(APPEND PROJECT_VERSION ".${BUILD_ID}")
     # SHA1 string + git 'dirty' flag
     string(REGEX REPLACE "^[0-9]+(\\.[0-9]+)+(.*)" "\\2" VERSION_GIT_STATE "${GIT_COMMIT_ID}")
-    string(APPEND MODULE_VERSION "${VERSION_GIT_STATE}-${BUILD_ID}")
+    string(APPEND MODULE_VERSION "${VERSION_GIT_STATE}")
 endif()
 
 # stage of build
