@@ -12,9 +12,9 @@ macro(add_qml_debug_plugin)
     cmake_parse_arguments(local "" "${options}" "" ${ARGN})
 
     if(NOT APPS_PLUGINS_QMLDEBUG)
-        if(EXISTS ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/${local_PLUGIN_NAME}.rcc)
+        if(EXISTS ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/sgw-${local_PLUGIN_NAME}.rcc)
             message(STATUS "...removing '${local_PLUGIN_NAME}.rcc'")
-            file(REMOVE ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/${local_PLUGIN_NAME}.rcc)
+            file(REMOVE ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/sgw-${local_PLUGIN_NAME}.rcc)
         endif()
 
     else()
@@ -26,7 +26,7 @@ macro(add_qml_debug_plugin)
         qt5_add_binary_resources(plugin-${local_PLUGIN_NAME}-rcc
             ${PLUGIN_QRC_FILENAME}
             OPTIONS ARGS --compress 9 --threshold 0 --verbose
-            DESTINATION ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/${local_PLUGIN_NAME}.rcc
+            DESTINATION ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/sgw-${local_PLUGIN_NAME}.rcc
         )
     endif()
 
