@@ -33,6 +33,6 @@ macro(add_sds_plugin)
             OPTIONS ARGS --compress 9 --threshold 0 --verbose
             DESTINATION ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/sds-${local_PLUGIN_NAME}.rcc
         )
-        add_dependencies(${local_PROJ_NAME} ${local_PROJ_NAME}-plugin-${local_PLUGIN_NAME}-rcc)
+        add_Dependencies(${local_PROJ_NAME} ${local_PROJ_NAME}-plugin-${local_PLUGIN_NAME}-rcc)
     endif()
 endmacro()

@@ -13,7 +13,7 @@ macro(add_qml_debug_plugin)
 
     if(NOT APPS_PLUGINS_QMLDEBUG)
         if(EXISTS ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/sgw-${local_PLUGIN_NAME}.rcc)
-            message(STATUS "...removing '${local_PLUGIN_NAME}.rcc'")
+            message(STATUS "...removing 'sgw-${local_PLUGIN_NAME}.rcc'")
             file(REMOVE ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/sgw-${local_PLUGIN_NAME}.rcc)
         endif()
 
@@ -37,9 +37,9 @@ macro(add_qml_debug_plugin_to_version)
     cmake_parse_arguments(local "" "${options}" "" ${ARGN})
 
     if(APPS_PLUGINS_QMLDEBUG)
-        message(STATUS "Qml Debug plugin '${local_PLUGIN_NAME}' for '${local_PROJ_NAME}'...")
+        message(STATUS "Qml Debug plugin 'sgw-${local_PLUGIN_NAME}' for '${local_PROJ_NAME}'...")
 
-        list(APPEND ${local_PROJ_NAME}_ENABLED_PLUGINS ${local_PLUGIN_NAME})
+        list(APPEND ${local_PROJ_NAME}_ENABLED_PLUGINS sgw-${local_PLUGIN_NAME})
     endif()
 
 endmacro()
