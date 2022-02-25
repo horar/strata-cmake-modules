@@ -12,9 +12,9 @@ macro(add_qml_debug_plugin)
     cmake_parse_arguments(local "" "${options}" "" ${ARGN})
 
     if(NOT APPS_PLUGINS_QMLDEBUG)
-        if(EXISTS ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/${local_PLUGIN_NAME}.rcc)
-            message(STATUS "...removing '${local_PLUGIN_NAME}.rcc'")
-            file(REMOVE ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/${local_PLUGIN_NAME}.rcc)
+        if(EXISTS ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/sgw-${local_PLUGIN_NAME}.rcc)
+            message(STATUS "...removing 'sgw-${local_PLUGIN_NAME}.rcc'")
+            file(REMOVE ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/sgw-${local_PLUGIN_NAME}.rcc)
         endif()
 
     else()
@@ -26,7 +26,7 @@ macro(add_qml_debug_plugin)
         qt5_add_binary_resources(plugin-${local_PLUGIN_NAME}-rcc
             ${PLUGIN_QRC_FILENAME}
             OPTIONS ARGS --compress 9 --threshold 0 --verbose
-            DESTINATION ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/${local_PLUGIN_NAME}.rcc
+            DESTINATION ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/sgw-${local_PLUGIN_NAME}.rcc
         )
     endif()
 
@@ -36,8 +36,10 @@ macro(add_qml_debug_plugin_to_version)
     set(options PROJ_NAME PLUGIN_NAME)
     cmake_parse_arguments(local "" "${options}" "" ${ARGN})
 
-    message(STATUS "Qml Debug plugin '${local_PLUGIN_NAME}' for '${local_PROJ_NAME}'...")
+    if(APPS_PLUGINS_QMLDEBUG)
+        message(STATUS "Qml Debug plugin 'sgw-${local_PLUGIN_NAME}' for '${local_PROJ_NAME}'...")
 
-    list(APPEND ${local_PROJ_NAME}_ENABLED_PLUGINS ${local_PLUGIN_NAME})
+        list(APPEND ${local_PROJ_NAME}_ENABLED_PLUGINS sgw-${local_PLUGIN_NAME})
+    endif()
 
 endmacro()

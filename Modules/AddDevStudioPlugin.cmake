@@ -20,9 +20,9 @@ macro(add_sds_plugin)
             file(REMOVE ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/sds-${local_PLUGIN_NAME}.rcc)
         endif()
     else()
-        message(STATUS "Strata DevStudio plugin '${local_PLUGIN_NAME}'...")
+        message(STATUS "Strata DevStudio plugin 'sds-${local_PLUGIN_NAME}'...")
 
-        list(APPEND ${local_PROJ_NAME}_ENABLED_PLUGINS ${local_PLUGIN_NAME})
+        list(APPEND ${local_PROJ_NAME}_ENABLED_PLUGINS sds-${local_PLUGIN_NAME})
 
         set(PLUGIN_QRC_FILENAME qml-dev-studio-plugin-${local_PLUGIN_NAME}.qrc)
         add_custom_target(${local_PROJ_NAME}-plugin-${local_PLUGIN_NAME}
@@ -33,6 +33,6 @@ macro(add_sds_plugin)
             OPTIONS ARGS --compress 9 --threshold 0 --verbose
             DESTINATION ${CMAKE_PLUGINS_OUTPUT_DIRECTORY}/sds-${local_PLUGIN_NAME}.rcc
         )
-        add_dependencies(${local_PROJ_NAME} ${local_PROJ_NAME}-plugin-${local_PLUGIN_NAME}-rcc)
+        add_Dependencies(${local_PROJ_NAME} ${local_PROJ_NAME}-plugin-${local_PLUGIN_NAME}-rcc)
     endif()
 endmacro()
