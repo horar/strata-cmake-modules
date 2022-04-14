@@ -46,7 +46,8 @@ string(REGEX REPLACE "\n$" "" GIT_COMMIT_ID ${GIT_COMMIT_ID})
 string(REGEX REPLACE "^${GITTAG_PREFIX}v" "" GIT_COMMIT_ID ${GIT_COMMIT_ID})
 
 # check number of digits in version string
-string(REPLACE "." ";" GIT_COMMIT_ID_VLIST ${GIT_COMMIT_ID})
+string(REGEX REPLACE "-.*" "" GIT_COMMIT_ID_VLIST ${GIT_COMMIT_ID})
+string(REPLACE "." ";" GIT_COMMIT_ID_VLIST ${GIT_COMMIT_ID_VLIST})
 list(LENGTH GIT_COMMIT_ID_VLIST GIT_COMMIT_ID_VLIST_COUNT)
 
 # no.: major
@@ -101,7 +102,7 @@ string(APPEND PROJECT_VERSION "${VERSION_GIT_STATE}")
 message(STATUS "${PROJECT_NAME}: ${PROJECT_VERSION}")
 
 # stage of build
-string(REGEX MATCH "((alpha|beta|rc)[0-9]*)|(rtm|ga)[-]" VERSION_STAGE "${VERSION_GIT_STATE}")
+string(REGEX MATCH "((alpha|beta|rc)(\\.[0-9]+|[0-9]*))|(rtm|ga)[-]" VERSION_STAGE "${VERSION_GIT_STATE}")
 if (NOT "${VERSION_STAGE}" STREQUAL "")
     set(STAGE_OF_DEVELOPMENT ${VERSION_STAGE})
     string(REPLACE "-${VERSION_STAGE}" "" VERSION_GIT_STATE "${VERSION_GIT_STATE}")
