@@ -161,30 +161,31 @@ if((NOT CMAKE_BUILD_TYPE STREQUAL "OTA") OR ("${OTA_PACKAGE_FOLDER_IN}" STREQUAL
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "OTA")
-    if(EXISTS ${PROJECT_DIR}/resources/qtifw/${OTA_PACKAGE_FOLDER_IN}/meta/package.xml.in)
-        process_config_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/${OTA_PACKAGE_FOLDER_IN}/meta/ ${WORKING_DIR} ${DEPLOYMENT_DIR}/${OTA_PACKAGE_FOLDER_OUT}/${PROJECT_BUNDLE_ID}/meta package.xml package.xml)
-    endif()
+    # set necessary variables so that they are used in the output files
+    set(STRATA_OTA_REPOSITORY_ENABLED $ENV{STRATA_OTA_REPOSITORY_ENABLED})
+    set(STRATA_OTA_REPOSITORY $ENV{STRATA_OTA_REPOSITORY})
+    set(ApplicationsDirX64 "@ApplicationsDirX64@")
+    string(TIMESTAMP BUILD_YEAR "%Y")
 
     file(GLOB_RECURSE files "${PROJECT_DIR}/resources/qtifw/config/*")
     foreach(file ${files})
         file(RELATIVE_PATH filename ${PROJECT_DIR}/resources/qtifw/config ${file})
-        if("${filename}" STREQUAL "config.xml.in")
-            set(STRATA_OTA_REPOSITORY_ENABLED $ENV{STRATA_OTA_REPOSITORY_ENABLED})
-            set(STRATA_OTA_REPOSITORY $ENV{STRATA_OTA_REPOSITORY})
-            set(ApplicationsDirX64 "@ApplicationsDirX64@")
-            process_config_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/config ${WORKING_DIR} ${DEPLOYMENT_DIR}/config config.xml config.xml)
+        if(${filename} MATCHES "\\.in$")
+            string(REGEX REPLACE "\\.in$" "" filename "${filename}")
+            process_config_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/config ${WORKING_DIR} ${DEPLOYMENT_DIR}/config ${filename} ${filename})
         else()
             process_resource_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/config ${WORKING_DIR} ${DEPLOYMENT_DIR}/config ${filename})
         endif()
     endforeach()
 
-    file(GLOB files
-        "${PROJECT_DIR}/resources/qtifw/${OTA_PACKAGE_FOLDER_IN}/meta/*license*"
-        "${PROJECT_DIR}/resources/qtifw/${OTA_PACKAGE_FOLDER_IN}/meta/*.[jq]s"
-        "${PROJECT_DIR}/resources/qtifw/${OTA_PACKAGE_FOLDER_IN}/meta/*.ui"
-        )
+    file(GLOB_RECURSE files "${PROJECT_DIR}/resources/qtifw/${OTA_PACKAGE_FOLDER_IN}/meta/*")
     foreach(file ${files})
-        get_filename_component(filename ${file} NAME)
-        process_resource_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/${OTA_PACKAGE_FOLDER_IN}/meta ${WORKING_DIR} ${DEPLOYMENT_DIR}/${OTA_PACKAGE_FOLDER_OUT}/${PROJECT_BUNDLE_ID}/meta ${filename})
+        file(RELATIVE_PATH filename ${PROJECT_DIR}/resources/qtifw/${OTA_PACKAGE_FOLDER_IN}/meta ${file})
+        if(${filename} MATCHES "\\.in$")
+            string(REGEX REPLACE "\\.in$" "" filename "${filename}")
+            process_config_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/${OTA_PACKAGE_FOLDER_IN}/meta ${WORKING_DIR} ${DEPLOYMENT_DIR}/${OTA_PACKAGE_FOLDER_OUT}/${PROJECT_BUNDLE_ID}/meta ${filename} ${filename})
+        else()
+            process_resource_file(${PROJECT_NAME} ${PROJECT_DIR}/resources/qtifw/${OTA_PACKAGE_FOLDER_IN}/meta ${WORKING_DIR} ${DEPLOYMENT_DIR}/${OTA_PACKAGE_FOLDER_OUT}/${PROJECT_BUNDLE_ID}/meta ${filename})
+        endif()
     endforeach()
 endif()
