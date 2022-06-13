@@ -162,8 +162,7 @@ endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "OTA")
     # set necessary variables so that they are used in the output files
-    set(STRATA_OTA_REPOSITORY_ENABLED $ENV{STRATA_OTA_REPOSITORY_ENABLED})
-    set(STRATA_OTA_REPOSITORY $ENV{STRATA_OTA_REPOSITORY})
+    set(STRATA_OTA_REPOSITORIES $ENV{STRATA_OTA_REPOSITORIES})
     set(ApplicationsDirX64 "@ApplicationsDirX64@")
     string(TIMESTAMP BUILD_YEAR "%Y")
 
