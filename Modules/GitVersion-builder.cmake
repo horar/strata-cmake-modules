@@ -163,7 +163,7 @@ endif()
 if(CMAKE_BUILD_TYPE STREQUAL "OTA")
     # set necessary variables so that they are used in the output files
     set(STRATA_OTA_REPOSITORIES $ENV{STRATA_OTA_REPOSITORIES})
-    set(ApplicationsDirX64 "@ApplicationsDirX64@")
+    set(ApplicationsDirUser "@ApplicationsDirUser@")
     string(TIMESTAMP BUILD_YEAR "%Y")
 
     file(GLOB_RECURSE files "${PROJECT_DIR}/resources/qtifw/config/*")
